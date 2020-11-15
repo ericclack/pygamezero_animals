@@ -17,7 +17,6 @@ class Animal(Actor):
         self.max_speed = MAX_SPEED
         self.speed = random.uniform(2,self.max_speed)
 
-
         Animal.all.append(self)
 
     def move(self):
@@ -38,9 +37,11 @@ class Animal(Actor):
         self.speed = min(self.max_speed, math.sqrt(dx ** 2 + dy ** 2))
         self.direction = math.atan2(dy, dx)
 
+        # Move
         self.x += dx
         self.y += dy
 
+        # Bounce off edge
         if self.x < 0 or self.y < 0 or self.x > WIDTH or self.y > HEIGHT:
             self.direction += math.pi
 
@@ -65,7 +66,8 @@ class Sheep(Animal):
     def attraction_to(self, other):
         d = self.distance_to(other)
 
-        # Attraction gets stronger the closer we get to other sheep
+        # Attraction gets stronger the closer we get to other sheep, unless
+        # we get too close
         if other.what == 'sheep':
             if d > 50:
                 return 5 / d
@@ -84,6 +86,8 @@ class Wolf(Animal):
     def move(self):
         super(Wolf, self).move()
         others = self.other_animals()
+
+        # Caught a sheep?
         i = self.collidelist(others)
         if i != -1 and others[i].what == 'sheep':
             others[i].max_speed = 0.1
