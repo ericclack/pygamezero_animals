@@ -27,7 +27,7 @@ class Animal(Actor):
 
         Animal.all.append(self)
 
-    def move(self):
+    def move(self, check_animals=True, check_zones=True, check_mouse=False):
         if self.status == Status.DEAD:
             return
 
@@ -35,14 +35,23 @@ class Animal(Actor):
         dx, dy = xy_from_angle_mag(self.direction, self.speed)
 
         # Change our direction and speed according to other animals
-        for o in self.other_animals():
-            fx, fy = xy_from_angle_mag(self.angle_to(o), self.attraction_to(o))
-            dx += fx
-            dy += fy
+        if check_animals:
+            for o in self.other_animals():
+                fx, fy = xy_from_angle_mag(self.angle_to(o), self.attraction_to(o))
+                dx += fx
+                dy += fy
 
         # Check no-go zones
-        for z in Zone.all:
-            fx, fy = xy_from_angle_mag(self.angle_to(z), z.attraction_to(self))
+        if check_zones:
+            for z in Zone.all:
+                fx, fy = xy_from_angle_mag(self.angle_to(z), z.attraction_to(self))
+                dx += fx
+                dy += fy
+
+        if check_mouse:
+            mx, my = pygame.mouse.get_pos()
+            angle, mag = angle_mag_from_xy(mx - self.x, my - self.y)
+            fx, fy = xy_from_angle_mag(angle, self.attraction_to_mouse(mag))
             dx += fx
             dy += fy
 
@@ -164,30 +173,10 @@ class SheepDog(Animal):
         self.max_speed = MAX_SPEED*1.4
 
     def move(self):
-        # Default direction vectior
-        dx, dy = xy_from_angle_mag(self.direction, self.speed)
+        super().move(check_animals=False, check_zones=True, check_mouse=True)
 
-        # Move towards the mouse
-        mx, my = pygame.mouse.get_pos()
-        angle, mag = angle_mag_from_xy(mx - self.x, my - self.y)
-        mag = min(mag, self.max_speed)
-        # Cauc force towards the mouse
-        fx, fy = xy_from_angle_mag(angle, mag)
-        # Update our movement vector
-        dx += fx
-        dy += fy
-        # 
-        # Uptdate direction with attractions above
-        self.direction, self.speed = angle_mag_from_xy(dx, dy)
-        # Don't move too fast
-        self.speed = min(self.max_speed, self.speed)
-        # Create the actual movement vector given that we might have reduced speed
-        dx, dy = xy_from_angle_mag(self.direction, self.speed)
-        
-        self.x += dx
-        self.y += dy
-
-        self.wrap_around()
+    def attraction_to_mouse(self, distance):
+        return 1
 
 
 # Make animals
