@@ -73,6 +73,23 @@ class Animal(Actor):
         # No attraction by default
         return 0
 
+
+class Zone():
+
+    all = []
+
+    def __init__(self, x, y, size):
+        self.x = x
+        self.y = y
+        self.size = size
+
+        Zone.all.append(self)
+
+    def draw(self):
+        screen.draw.filled_circle((self.x, self.y), self.size // 2, (0, 150, 150))
+
+# ----------------------------------------------------------
+
 class Sheep(Animal):
     def __init__(self):
         super().__init__('sheep.png')
@@ -141,8 +158,12 @@ for i in range(20):
 Wolf()
 SheepDog()
 
+# Make zones
+Zone(50, 50, 250)
+
 def draw():
     screen.clear()
+    for z in Zone.all: z.draw()
     for a in Animal.all: a.draw()
 
 def update():
