@@ -40,6 +40,12 @@ class Animal(Actor):
             dx += fx
             dy += fy
 
+        # Check no-go zones
+        for z in Zone.all:
+            fx, fy = xy_from_angle_mag(self.angle_to(z), z.attraction_to(self))
+            dx += fx
+            dy += fy
+
         # Uptdate direction with attractions above
         self.direction, self.speed = angle_mag_from_xy(dx, dy)
         # Don't move too fast
@@ -77,16 +83,29 @@ class Animal(Actor):
 class Zone():
 
     all = []
+    SAFE = (0, 150, 150)
+    NO_GO = (150, 0, 0)
 
-    def __init__(self, x, y, size):
+    def __init__(self, x, y, size, ztype):
         self.x = x
         self.y = y
         self.size = size
+        self.ztype = ztype
 
         Zone.all.append(self)
 
     def draw(self):
-        screen.draw.filled_circle((self.x, self.y), self.size // 2, (0, 150, 150))
+        screen.draw.filled_circle((self.x, self.y), self.size // 2, self.ztype)
+
+    def attraction_to(self, a):
+        """How attractive is this zone to this animal?"""
+        distance = a.distance_to(self)
+        from_edge = distance - self.size // 2
+
+        if self.ztype == Zone.NO_GO:
+            if from_edge <= 0: return -100
+
+        return 0
 
 # ----------------------------------------------------------
 
@@ -159,7 +178,8 @@ Wolf()
 SheepDog()
 
 # Make zones
-Zone(50, 50, 250)
+Zone(50, 50, 250, Zone.SAFE)
+Zone(WIDTH/2, HEIGHT/2, 200, Zone.NO_GO)
 
 def draw():
     screen.clear()
