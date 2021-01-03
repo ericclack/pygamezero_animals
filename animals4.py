@@ -57,7 +57,9 @@ class Animal(Actor):
         self.x += dx
         self.y += dy
 
-        # Wrap around
+        self.wrap_around()
+
+    def wrap_around(self):
         if self.x < 0:         self.x = WIDTH
         elif self.x > WIDTH:   self.x = 0
         if self.y < 0:         self.y = HEIGHT
@@ -154,7 +156,7 @@ class Wolf(Animal):
                 return 15 / (d / 10) ** 2
 
         if isinstance(other, SheepDog):
-            return -15 / (d/10) ** 2
+            return -15 / (d/20) ** 2
 
 class SheepDog(Animal):
     def __init__(self):
@@ -162,13 +164,30 @@ class SheepDog(Animal):
         self.max_speed = MAX_SPEED*1.4
 
     def move(self):
+        # Default direction vectior
+        dx, dy = xy_from_angle_mag(self.direction, self.speed)
+
+        # Move towards the mouse
         mx, my = pygame.mouse.get_pos()
         angle, mag = angle_mag_from_xy(mx - self.x, my - self.y)
         mag = min(mag, self.max_speed)
-        dx, dy = xy_from_angle_mag(angle, mag)
-
+        # Cauc force towards the mouse
+        fx, fy = xy_from_angle_mag(angle, mag)
+        # Update our movement vector
+        dx += fx
+        dy += fy
+        # 
+        # Uptdate direction with attractions above
+        self.direction, self.speed = angle_mag_from_xy(dx, dy)
+        # Don't move too fast
+        self.speed = min(self.max_speed, self.speed)
+        # Create the actual movement vector given that we might have reduced speed
+        dx, dy = xy_from_angle_mag(self.direction, self.speed)
+        
         self.x += dx
         self.y += dy
+
+        self.wrap_around()
 
 
 # Make animals
@@ -179,7 +198,11 @@ SheepDog()
 
 # Make zones
 Zone(50, 50, 250, Zone.SAFE)
+
 Zone(WIDTH/2, HEIGHT/2, 200, Zone.NO_GO)
+Zone(WIDTH/2 + 75, HEIGHT/2 - 75, 100, Zone.NO_GO)
+Zone(WIDTH/2 + 150, HEIGHT/2 - 150, 100, Zone.NO_GO)
+Zone(WIDTH/2 - 75, HEIGHT/2 + 75, 100, Zone.NO_GO)
 
 def draw():
     screen.clear()
