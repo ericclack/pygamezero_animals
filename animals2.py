@@ -32,15 +32,18 @@ class Animal(Actor):
 
         # Uptdate direction with attractions above
         self.direction, self.speed = angle_mag_from_xy(dx, dy)
+        # Don't move too fast
         self.speed = min(self.max_speed, self.speed)
 
         # Move
         self.x += dx
         self.y += dy
 
-        # Bounce off edge
-        if self.x < 0 or self.y < 0 or self.x > WIDTH or self.y > HEIGHT:
-            self.direction += math.pi
+        # Wrap around
+        if self.x < 0:         self.x = WIDTH
+        elif self.x > WIDTH:   self.x = 0
+        if self.y < 0:         self.y = HEIGHT
+        elif self.y > HEIGHT:  self.y = 0
 
     def other_animals(self):
         """All the animals except us"""
@@ -62,19 +65,19 @@ class Sheep(Animal):
     def __init__(self): super(Sheep, self).__init__('sheep')
 
     def attraction_to(self, other):
+        """Positive number means attraction, negative repulsion"""
         d = self.distance_to(other)
 
         # Attraction gets stronger the closer we get to other sheep, unless
         # we get too close
         if other.what == 'sheep':
-            if d > 50:
-                return 5 / d
-            else:
-                return -5 / d
+            return 0
+            if d > 50: return 5 / (d-50) ** 2
+            else:      return -5 / d
 
         elif other.what == 'wolf':
             # A wolf, run away!
-            return -25 / d
+            return -25 / (d / 10) ** 2
 
 class Wolf(Animal):
     def __init__(self):
