@@ -71,18 +71,18 @@ class Sheep(Animal):
         # Attraction gets stronger the closer we get to other sheep, unless
         # we get too close
         if other.what == 'sheep':
-            return 0
-            if d > 50: return 5 / (d-50) ** 2
+            if d > 50: return 5 / (d / 5) ** 2
             else:      return -5 / d
 
         elif other.what == 'wolf':
             # A wolf, run away!
-            return -25 / (d / 10) ** 2
+            return -15 / (d / 10) ** 2
 
 class Wolf(Animal):
     def __init__(self):
         super(Wolf, self).__init__('wolf')
         self.chasing = random.choice(self.other_animals())
+        self.max_speed = MAX_SPEED*1.5
 
     def move(self):
         super(Wolf, self).move()
@@ -91,16 +91,16 @@ class Wolf(Animal):
         # Caught a sheep?
         i = self.collidelist(others)
         if i != -1 and others[i].what == 'sheep':
-            others[i].max_speed = 0.1
+            others[i].max_speed = 0.05
 
     def attraction_to(self, other):
         # Attraction gets stronger the closer the other gets
         d = self.distance_to(other)
         if other.what == 'sheep':
             if other == self.chasing:
-                return 15 / d
+                return 15 / (d / 10) ** 2
             else:
-                return 10 / d
+                return 15 / (d / 10) ** 2
 
 # Make animals
 for i in range(20):
