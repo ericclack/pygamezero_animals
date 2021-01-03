@@ -15,14 +15,13 @@ class Animal(Actor):
 
     all = []
 
-    def __init__(self, what):
-        super(Animal, self).__init__('%s.png' % what)
-        self.what = what
+    def __init__(self, img):
+        super(Animal, self).__init__(img)
         self.x = random.randint(0, WIDTH)
         self.y = random.randint(0, HEIGHT)
         self.direction = random.uniform(0, math.pi * 2)
         self.max_speed = MAX_SPEED
-        self.speed = random.uniform(2,self.max_speed)
+        self.speed = random.uniform(0.1, self.max_speed)
         self.status = Status.ALIVE
 
         Animal.all.append(self)
@@ -75,7 +74,7 @@ class Animal(Actor):
 
 class Sheep(Animal):
     def __init__(self):
-        super().__init__('sheep')
+        super().__init__('sheep.png')
 
     def attraction_to(self, other):
         """Positive number means attraction, negative repulsion"""
@@ -83,20 +82,20 @@ class Sheep(Animal):
 
         # Attraction gets stronger the closer we get to other sheep, unless
         # we get too close
-        if other.what == 'sheep':
+        if isinstance(other, Sheep):
             if d > 50: return 5 / (d / 5) ** 2
             else:      return -5 / d
 
-        elif other.what == 'wolf':
+        elif isinstance(other, Wolf):
             # A wolf, run away!
             return -15 / (d / 10) ** 2
 
-        elif other.what == 'dog':
+        elif isinstance(other, SheepDog):
             return -10 / (d / 5) ** 2
 
 class Wolf(Animal):
     def __init__(self):
-        super().__init__('wolf')
+        super().__init__('wolf.png')
         self.max_speed = MAX_SPEED*1.5
 
     def move(self):
@@ -105,24 +104,24 @@ class Wolf(Animal):
 
         # Caught a sheep?
         i = self.collidelist(others)
-        if i != -1 and others[i].what == 'sheep':
+        if i != -1 and isinstance(others[i], Sheep):
             others[i].status = Status.DEAD
 
     def attraction_to(self, other):
         # Attraction gets stronger the closer the other gets
         d = self.distance_to(other)
-        if other.what == 'sheep':
+        if isinstance(other, Sheep):
             if other.status == Status.DEAD:
                 return 0
             else:
                 return 15 / (d / 10) ** 2
 
-        if other.what == 'dog':
+        if isinstance(other, SheepDog):
             return -15 / (d/10) ** 2
 
 class SheepDog(Animal):
     def __init__(self):
-        super().__init__('dog')
+        super().__init__('dog.png')
         self.max_speed = MAX_SPEED*1.4
 
     def move(self):
