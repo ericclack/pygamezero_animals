@@ -1,9 +1,14 @@
 import random, math, time
+from enum import Enum
 from animals_lib import *
 
 WIDTH = 800
 HEIGHT = 800
 MAX_SPEED = 2
+
+class Status(Enum):
+    DEAD = 0
+    ALIVE = 1
 
 class Animal(Actor):
 
@@ -17,10 +22,14 @@ class Animal(Actor):
         self.direction = random.uniform(0, math.pi * 2)
         self.max_speed = MAX_SPEED
         self.speed = random.uniform(2,self.max_speed)
+        self.status = Status.ALIVE
 
         Animal.all.append(self)
 
     def move(self):
+        if self.status == Status.DEAD:
+            return
+
         # Our default direction vector
         dx, dy = xy_from_angle_mag(self.direction, self.speed)
 
@@ -34,6 +43,8 @@ class Animal(Actor):
         self.direction, self.speed = angle_mag_from_xy(dx, dy)
         # Don't move too fast
         self.speed = min(self.max_speed, self.speed)
+        # Create the actual movement vector given that we might have reduced speed
+        dx, dy = xy_from_angle_mag(self.direction, self.speed)
 
         # Move
         self.x += dx
@@ -82,7 +93,6 @@ class Sheep(Animal):
 class Wolf(Animal):
     def __init__(self):
         super().__init__('wolf')
-        self.chasing = random.choice(self.other_animals())
         self.max_speed = MAX_SPEED*1.5
 
     def move(self):
@@ -92,14 +102,14 @@ class Wolf(Animal):
         # Caught a sheep?
         i = self.collidelist(others)
         if i != -1 and others[i].what == 'sheep':
-            others[i].max_speed = 0.05
+            others[i].status = Status.DEAD
 
     def attraction_to(self, other):
         # Attraction gets stronger the closer the other gets
         d = self.distance_to(other)
         if other.what == 'sheep':
-            if other == self.chasing:
-                return 15 / (d / 10) ** 2
+            if other.status == Status.DEAD:
+                return 0
             else:
                 return 15 / (d / 10) ** 2
 
