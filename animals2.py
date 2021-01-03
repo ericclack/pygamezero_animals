@@ -1,8 +1,9 @@
 import random, math, time
+from animals_lib import *
 
-WIDTH = 500
-HEIGHT = 400
-MAX_SPEED = 4
+WIDTH = 800
+HEIGHT = 800
+MAX_SPEED = 2
 
 class Animal(Actor):
 
@@ -21,21 +22,17 @@ class Animal(Actor):
 
     def move(self):
         # Our default direction vector
-        dx = math.cos(self.direction) * self.speed
-        dy = math.sin(self.direction) * self.speed
+        dx, dy = xy_from_angle_mag(self.direction, self.speed)
 
         # Change our direction and speed according to other animals
         for o in self.other_animals():
-            angle = self.angle_to(o)
-            fx = math.cos(angle) * self.attraction_to(o)
-            fy = math.sin(angle) * self.attraction_to(o)
-
+            fx, fy = xy_from_angle_mag(self.angle_to(o), self.attraction_to(o))
             dx += fx
             dy += fy
 
         # Uptdate direction with attractions above
-        self.speed = min(self.max_speed, math.sqrt(dx ** 2 + dy ** 2))
-        self.direction = math.atan2(dy, dx)
+        self.direction, self.speed = angle_mag_from_xy(dx, dy)
+        self.speed = min(self.max_speed, self.speed)
 
         # Move
         self.x += dx
@@ -58,7 +55,8 @@ class Animal(Actor):
         return math.atan2(other.y - self.y, other.x - self.x)
 
     def attraction_to(self, other):
-        0 # No attraction by default
+        # No attraction by default
+        return 0
 
 class Sheep(Animal):
     def __init__(self): super(Sheep, self).__init__('sheep')
