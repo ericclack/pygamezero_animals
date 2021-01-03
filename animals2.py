@@ -62,7 +62,8 @@ class Animal(Actor):
         return 0
 
 class Sheep(Animal):
-    def __init__(self): super(Sheep, self).__init__('sheep')
+    def __init__(self):
+        super().__init__('sheep')
 
     def attraction_to(self, other):
         """Positive number means attraction, negative repulsion"""
@@ -80,12 +81,12 @@ class Sheep(Animal):
 
 class Wolf(Animal):
     def __init__(self):
-        super(Wolf, self).__init__('wolf')
+        super().__init__('wolf')
         self.chasing = random.choice(self.other_animals())
         self.max_speed = MAX_SPEED*1.5
 
     def move(self):
-        super(Wolf, self).move()
+        super().move()
         others = self.other_animals()
 
         # Caught a sheep?
