@@ -27,7 +27,7 @@ class Animal(Actor):
 
         Animal.all.append(self)
 
-    def move(self):
+    def move(self, check_animals=True, check_zones=True, check_mouse=False):
         if self.status == Status.DEAD:
             return
 
@@ -35,8 +35,23 @@ class Animal(Actor):
         dx, dy = xy_from_angle_mag(self.direction, self.speed)
 
         # Change our direction and speed according to other animals
-        for o in self.other_animals():
-            fx, fy = xy_from_angle_mag(self.angle_to(o), self.attraction_to(o))
+        if check_animals:
+            for o in self.other_animals():
+                fx, fy = xy_from_angle_mag(self.angle_to(o), self.attraction_to(o))
+                dx += fx
+                dy += fy
+
+        # Check no-go zones
+        if check_zones:
+            for z in Zone.all:
+                fx, fy = xy_from_angle_mag(self.angle_to(z), z.attraction_to(self))
+                dx += fx
+                dy += fy
+
+        if check_mouse:
+            mx, my = pygame.mouse.get_pos()
+            angle, mag = angle_mag_from_xy(mx - self.x, my - self.y)
+            fx, fy = xy_from_angle_mag(angle, self.attraction_to_mouse(mag))
             dx += fx
             dy += fy
 
@@ -51,7 +66,9 @@ class Animal(Actor):
         self.x += dx
         self.y += dy
 
-        # Wrap around
+        self.wrap_around()
+
+    def wrap_around(self):
         if self.x < 0:         self.x = WIDTH
         elif self.x > WIDTH:   self.x = 0
         if self.y < 0:         self.y = HEIGHT
@@ -73,9 +90,43 @@ class Animal(Actor):
         # No attraction by default
         return 0
 
+
+class Zone():
+
+    all = []
+    SAFE = (0, 150, 150)
+    NO_GO = (150, 0, 0)
+
+    def __init__(self, x, y, size, ztype):
+        self.x = x
+        self.y = y
+        self.size = size
+        self.ztype = ztype
+
+        Zone.all.append(self)
+
+    def draw(self):
+        screen.draw.filled_circle((self.x, self.y), self.size // 2, self.ztype)
+
+    def attraction_to(self, a):
+        """How attractive is this zone to this animal?"""
+        distance = a.distance_to(self)
+        from_edge = distance - self.size // 2
+
+        if self.ztype == Zone.NO_GO:
+            if from_edge <= 0: return -100
+
+        if self.ztype == Zone.SAFE and isinstance(a, Wolf):
+            if from_edge <= 0: return -100
+
+        return 0
+
+# ----------------------------------------------------------
+
 class Sheep(Animal):
     def __init__(self):
         super().__init__('sheep.png')
+        self.max_speed = 1
 
     def attraction_to(self, other):
         """Positive number means attraction, negative repulsion"""
@@ -83,7 +134,7 @@ class Sheep(Animal):
 
         # Attraction gets stronger the closer we get to other sheep, unless
         # we get too close
-        if isinstance(other, Sheep):
+        if isinstance(other, Sheep) and other.status == Status.ALIVE:
             if d > 50: return 5 / (d / 5) ** 2
             else:      return -5 / d
 
@@ -93,6 +144,8 @@ class Sheep(Animal):
 
         elif isinstance(other, SheepDog):
             return -10 / (d / 5) ** 2
+
+        return 0
 
 class Wolf(Animal):
     def __init__(self):
@@ -118,7 +171,7 @@ class Wolf(Animal):
                 return 15 / (d / 10) ** 2
 
         if isinstance(other, SheepDog):
-            return -15 / (d/10) ** 2
+            return -15 / (d/20) ** 2
 
 class SheepDog(Animal):
     def __init__(self):
@@ -126,13 +179,10 @@ class SheepDog(Animal):
         self.max_speed = MAX_SPEED*1.4
 
     def move(self):
-        mx, my = pygame.mouse.get_pos()
-        angle, mag = angle_mag_from_xy(mx - self.x, my - self.y)
-        mag = min(mag, self.max_speed)
-        dx, dy = xy_from_angle_mag(angle, mag)
+        super().move(check_animals=False, check_zones=True, check_mouse=True)
 
-        self.x += dx
-        self.y += dy
+    def attraction_to_mouse(self, distance):
+        return 1
 
 
 # Make animals
@@ -141,8 +191,17 @@ for i in range(20):
 Wolf()
 SheepDog()
 
+# Make zones
+Zone(150, 150, 450, Zone.SAFE)
+
+Zone(WIDTH/2, HEIGHT/2, 200, Zone.NO_GO)
+Zone(WIDTH/2 + 75, HEIGHT/2 - 75, 100, Zone.NO_GO)
+Zone(WIDTH/2 + 150, HEIGHT/2 - 150, 100, Zone.NO_GO)
+Zone(WIDTH/2 - 75, HEIGHT/2 + 75, 100, Zone.NO_GO)
+
 def draw():
     screen.clear()
+    for z in Zone.all: z.draw()
     for a in Animal.all: a.draw()
 
 def update():
