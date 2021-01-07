@@ -116,6 +116,9 @@ class Zone():
         if self.ztype == Zone.NO_GO:
             if from_edge <= 0: return -100
 
+        if self.ztype == Zone.SAFE and isinstance(a, Wolf):
+            if from_edge <= 0: return -100
+
         return 0
 
 # ----------------------------------------------------------
@@ -123,6 +126,7 @@ class Zone():
 class Sheep(Animal):
     def __init__(self):
         super().__init__('sheep.png')
+        self.max_speed = 1
 
     def attraction_to(self, other):
         """Positive number means attraction, negative repulsion"""
@@ -130,7 +134,7 @@ class Sheep(Animal):
 
         # Attraction gets stronger the closer we get to other sheep, unless
         # we get too close
-        if isinstance(other, Sheep):
+        if isinstance(other, Sheep) and other.status == Status.ALIVE:
             if d > 50: return 5 / (d / 5) ** 2
             else:      return -5 / d
 
@@ -140,6 +144,8 @@ class Sheep(Animal):
 
         elif isinstance(other, SheepDog):
             return -10 / (d / 5) ** 2
+
+        return 0
 
 class Wolf(Animal):
     def __init__(self):
@@ -186,7 +192,7 @@ Wolf()
 SheepDog()
 
 # Make zones
-Zone(50, 50, 250, Zone.SAFE)
+Zone(150, 150, 450, Zone.SAFE)
 
 Zone(WIDTH/2, HEIGHT/2, 200, Zone.NO_GO)
 Zone(WIDTH/2 + 75, HEIGHT/2 - 75, 100, Zone.NO_GO)

@@ -8,7 +8,7 @@ class Animal(Actor):
     all = []
 
     def __init__(self, id=None):
-        super(Animal, self).__init__('sheep%s.png' % id)
+        super(Animal, self).__init__('sheep.png')
         self.id = id
         self.x = random.randint(0, WIDTH)
         self.y = random.randint(0, HEIGHT)

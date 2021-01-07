@@ -112,10 +112,12 @@ class Wolf(Animal):
                 return 0
             else:
                 return 15 / (d / 10) ** 2
+        return 0
 
 # Make animals
 for i in range(20):
     Sheep()
+Wolf()
 Wolf()
 
 def draw():
