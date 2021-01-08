@@ -10,12 +10,19 @@ force for the wolf so that the sheep run away!
 
 We're going to use a bit of maths to do this. Ready? Deep breath!
 
+Here's two sheep that we want to bring closer together. The red line
+is the force of attraction between them, you can see it works in a
+straight line between the sheep.
+
+.. image:: images/sheep-attraction.png
+	   :width: 400
+
 So to calculate the force of attraction between two sheep we need to:
  1. find the distance between them -- we can easily find the
     difference in x and y values, and then we can use Pythagoras
-    Theorem to compute the distance
+    Theorem to compute the distance along the straight line
  2. use distance to compute a force of attraction that gets stronger as
-    the sheep get closer together
+    the sheep get closer together, that's how long the red line is
  3. find the angle from one sheep to another
  4. use the angle to move the sheep together.
 
