@@ -3,8 +3,8 @@
 Part 1
 ======
 
-In part 1 we're going to create our first new class first to model a
-single sheep, and then a whole flock.
+In part 1 we're going to create our first new class to model a
+single sheep, and then later a whole flock.
 
 Getting Started
 ---------------
