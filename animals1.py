@@ -1,6 +1,6 @@
 import random
 
-WIDTH = 500
+WIDTH = 600
 HEIGHT = 400
 TITLE = "Animal Simulation"
 
@@ -18,6 +18,7 @@ class Animal(Actor):
 a = Animal()
 
 def draw():
+    screen.blit('southdowns.jpeg', (0,0))
     a.draw()
 
 def update():

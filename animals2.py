@@ -53,7 +53,7 @@ Animal()
 Animal()
 
 def draw():
-    screen.clear()
+    screen.blit('southdowns.jpeg', (0,0))
     for a in Animal.all: a.draw()
     #time.sleep(2)
 
