@@ -4,7 +4,7 @@ from animals_lib import *
 
 WIDTH = 800
 HEIGHT = 600
-MAX_SPEED = 2
+MAX_SPEED = 1.5
 
 class Status(Enum):
     DEAD = 0
@@ -50,11 +50,13 @@ class Animal(Actor):
         self.x += dx
         self.y += dy
 
-        # Wrap around
-        if self.x < 0:         self.x = WIDTH
-        elif self.x > WIDTH:   self.x = 0
-        if self.y < 0:         self.y = HEIGHT
-        elif self.y > HEIGHT:  self.y = 0
+        self.stay_on_screen()
+
+    def stay_on_screen(self):
+        if self.x < 0:         self.x = 0
+        elif self.x > WIDTH:   self.x = WIDTH
+        if self.y < 0:         self.y = 0
+        elif self.y > HEIGHT:  self.y = HEIGHT
 
     def other_animals(self):
         """All the animals except us"""
@@ -80,20 +82,19 @@ class Sheep(Animal):
         """Positive number means attraction, negative repulsion"""
         d = self.distance_to(other)
 
-        # Attraction gets stronger the closer we get to other sheep, unless
-        # we get too close
         if other.what == 'sheep':
-            if d > 50: return 5 / (d / 5) ** 2
-            else:      return -5 / d
+            # Attraction until we get too close
+            d = self.distance_to(other)
+            return (-30/d) + 0.01*d
 
         elif other.what == 'wolf':
             # A wolf, run away!
-            return -15 / (d / 10) ** 2
+            return -400 / d
 
 class Wolf(Animal):
     def __init__(self):
         super().__init__('wolf')
-        self.max_speed = MAX_SPEED*1.5
+        self.max_speed = MAX_SPEED
 
     def move(self):
         super().move()
@@ -115,7 +116,7 @@ class Wolf(Animal):
         return 0
 
 # Make animals
-for i in range(20):
+for i in range(5):
     Sheep()
 Wolf()
 Wolf()

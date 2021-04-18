@@ -95,7 +95,7 @@ class Zone():
 
     all = []
     SAFE = (150, 255, 150)
-    NO_GO = (100, 100, 200) #Water
+    NO_GO = (0, 171, 255) #Water
 
     def __init__(self, x, y, size, ztype):
         self.x = x
@@ -187,7 +187,7 @@ class SheepDog(Animal):
 # Make animals
 for i in range(20):
     Sheep()
-Wolf()
+#Wolf()
 SheepDog()
 
 # Make zones
@@ -200,7 +200,7 @@ Zone(WIDTH/2 + 150, HEIGHT/2 - 150, 50, Zone.NO_GO)
 Zone(WIDTH/2 - 75, HEIGHT/2 + 75, 50, Zone.NO_GO)
 
 def draw():
-    screen.clear()
+    screen.fill((55,80,40))
     for z in Zone.all: z.draw()
     for a in Animal.all: a.draw()
 
