@@ -46,10 +46,9 @@ class Animal(Actor):
         return math.atan2(other.y - self.y, other.x - self.x)
 
     def attraction_to(self, other):
-        # Attraction gets stronger the closer the other gets
+        # Attraction until we get too close
         d = self.distance_to(other)
         return min(0.25, (-30/d) + 0.01*d)
-        #return min(2, 30 / d)
 
 # Make 3 animals
 Animal()

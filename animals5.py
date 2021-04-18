@@ -4,7 +4,7 @@ import pygame
 from animals_lib import *
 
 WIDTH = 800
-HEIGHT = 800
+HEIGHT = 600
 MAX_SPEED = 2
 
 class Status(Enum):
@@ -66,13 +66,13 @@ class Animal(Actor):
         self.x += dx
         self.y += dy
 
-        self.wrap_around()
+        self.stay_on_screen()
 
-    def wrap_around(self):
-        if self.x < 0:         self.x = WIDTH
-        elif self.x > WIDTH:   self.x = 0
-        if self.y < 0:         self.y = HEIGHT
-        elif self.y > HEIGHT:  self.y = 0
+    def stay_on_screen(self):
+        if self.x < 0:         self.x = 0
+        elif self.x > WIDTH:   self.x = WIDTH
+        if self.y < 0:         self.y = 0
+        elif self.y > HEIGHT:  self.y = HEIGHT
 
     def other_animals(self):
         """All the animals except us"""
@@ -94,8 +94,8 @@ class Animal(Actor):
 class Zone():
 
     all = []
-    SAFE = (0, 150, 150)
-    NO_GO = (150, 0, 0)
+    SAFE = (150, 255, 150)
+    NO_GO = (100, 100, 200) #Water
 
     def __init__(self, x, y, size, ztype):
         self.x = x
@@ -126,17 +126,16 @@ class Zone():
 class Sheep(Animal):
     def __init__(self):
         super().__init__('sheep.png')
+        # Start top left
+        self.x = self.y = random.randint(5,40)
         self.max_speed = 1
 
     def attraction_to(self, other):
         """Positive number means attraction, negative repulsion"""
         d = self.distance_to(other)
 
-        # Attraction gets stronger the closer we get to other sheep, unless
-        # we get too close
         if isinstance(other, Sheep) and other.status == Status.ALIVE:
-            if d > 50: return 5 / (d / 5) ** 2
-            else:      return -5 / d
+            return min(0.25, (-30/(d+0.001)) + 0.01*d)
 
         elif isinstance(other, Wolf):
             # A wolf, run away!
@@ -192,12 +191,13 @@ Wolf()
 SheepDog()
 
 # Make zones
-Zone(150, 150, 450, Zone.SAFE)
+Zone(50, 50, 300, Zone.SAFE)
+Zone(WIDTH-50, HEIGHT-50, 300, Zone.SAFE)
 
-Zone(WIDTH/2, HEIGHT/2, 200, Zone.NO_GO)
-Zone(WIDTH/2 + 75, HEIGHT/2 - 75, 100, Zone.NO_GO)
-Zone(WIDTH/2 + 150, HEIGHT/2 - 150, 100, Zone.NO_GO)
-Zone(WIDTH/2 - 75, HEIGHT/2 + 75, 100, Zone.NO_GO)
+Zone(WIDTH/2, HEIGHT/2, 100, Zone.NO_GO)
+Zone(WIDTH/2 + 75, HEIGHT/2 - 75, 50, Zone.NO_GO)
+Zone(WIDTH/2 + 150, HEIGHT/2 - 150, 50, Zone.NO_GO)
+Zone(WIDTH/2 - 75, HEIGHT/2 + 75, 50, Zone.NO_GO)
 
 def draw():
     screen.clear()
