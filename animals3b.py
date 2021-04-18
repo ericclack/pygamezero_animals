@@ -76,6 +76,11 @@ class Sheep(Animal):
     def __init__(self):
         super().__init__('sheep')
 
+    def draw(self):
+        if self.status == Status.DEAD:
+            self.image = 'hit_sheep.png'
+        super().draw()
+
     def attraction_to(self, other):
         """Positive number means attraction, negative repulsion"""
         d = self.distance_to(other)

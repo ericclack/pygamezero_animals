@@ -6,9 +6,12 @@
 Welcome to Animal Simulation Tutorial for Pygame Zero!
 ======================================================
 
-In this tutorial we'll make a simulation of animals with a flock and a
-preditor. You'll learn about object orientation, classes and forces of
-attraction, including some geometry maths.
+In this tutorial we'll use Python to explore modelling an ecosystem,
+with mountains, lakes, sheep, wolves and you as a shepheard. 
+
+We'll learn about classes, forces between animals (attraction and
+fear) and a bit of geometry maths too (don't worry, we'll guide you
+through it).
 
 If you've not yet set up Pygame Zero and the editor Mu, head over to
 our `Flappy Bird Tutorial`_ and follow the instructions there.

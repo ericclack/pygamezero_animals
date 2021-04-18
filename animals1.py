@@ -8,8 +8,8 @@ class Animal(Actor):
 
     def __init__(self):
         super().__init__('sheep.png')
-        self.x = random.randint(0, WIDTH)
-        self.y = random.randint(0, HEIGHT)
+        self.x = random.randint(WIDTH*1/4, WIDTH*3/4)
+        self.y = random.randint(HEIGHT*1/4, HEIGHT*3/4)
 
     def move(self):
         self.x += 1
