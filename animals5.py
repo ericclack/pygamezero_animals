@@ -139,7 +139,7 @@ class Sheep(Animal):
 
         elif isinstance(other, Wolf):
             # A wolf, run away!
-            return -15 / (d / 10) ** 2
+            return -100/d
 
         elif isinstance(other, SheepDog):
             return -10 / (d / 5) ** 2
@@ -149,7 +149,7 @@ class Sheep(Animal):
 class Wolf(Animal):
     def __init__(self):
         super().__init__('wolf.png')
-        self.max_speed = MAX_SPEED*1.5
+        self.max_speed = MAX_SPEED*1.1
 
     def move(self):
         super().move()
