@@ -55,7 +55,6 @@ Animal()
 def draw():
     screen.blit('southdowns.jpeg', (0,0))
     for a in Animal.all: a.draw()
-    #time.sleep(2)
 
 def update():
     for a in Animal.all: a.move()

@@ -5,8 +5,12 @@ Part 2
 
 In part 2 we're going to make the sheep flock together and stop them
 disappearing off the screen. To do this we're going to compute a force
-of attraction between the sheep. Later we'll also add an opposite
-force for the wolf so that the sheep run away!
+of attraction between the sheep. This will make the sheep move towards
+each other, and make them more interested in each other the closer they
+get.
+
+Later we'll also add an opposite force (a fear force) for the wolf so
+that the sheep run away!
 
 We're going to use a bit of maths to do this. Ready? Deep breath!
 
@@ -42,7 +46,8 @@ Pythagoras states that the long edge of the right-angled triangle (the
 hypotenuse) is equal to the square root of the base squared (the
 difference in x) and the height squared (the difference in y).
 
-Notice that to square something in Python we write :code:`something ** 2`.
+Notice that to square something in Python we write :code:`something **
+2`.
 
 With this method we can now compute the distance between any two sheep
 like this: ::
@@ -102,15 +107,19 @@ This is almost the last new method in this part, again add it to your
 Final step: bring it all together
 ---------------------------------
 
-OK, let's bring those 4 steps together in our *move* method. Change it so that
-it looks like this: ::
+OK, let's bring those 4 steps together in our *move* method. Change it
+so that it looks like this:
+
+.. code-block:: python
+   :emphasize-lines: 2,3
 
     def move(self):
         for o in self.other_animals():
             self.move_by_attraction(o)
 
-Finally we just need to write the method :code:`other_animals`, which gives us
-all other animals as we don't want to move towards ourself! ::
+Finally we just need to write the method :code:`other_animals`, which
+gives us all other animals as we don't want to move towards ourself!
+::
 
    def other_animals(self):
         """All the animals except us"""
