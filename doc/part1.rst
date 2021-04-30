@@ -56,7 +56,7 @@ The function (or more correctly, method) :code:`__init__` is called
 the constructor, it's what we want to happen when we make a new
 *Animal*.
 
-So let's do that, let's make a new animal. Add this sigle line of code
+So let's do that, let's make a new animal. Add this single line of code
 under your class and *don't indent it* as we want this to be *outside*
 the class code. The new line is marked in yellow below: 
 
