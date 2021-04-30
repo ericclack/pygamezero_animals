@@ -7,7 +7,7 @@ Welcome to Animal Simulation Tutorial for Pygame Zero!
 ======================================================
 
 In this tutorial we'll use Python to explore modelling an ecosystem,
-with mountains, lakes, sheep, wolves and you as a shepheard. 
+with mountains, lakes, sheep, wolves and you as a shepherd. 
 
 We'll learn about classes, forces between animals (attraction and
 fear) and a bit of geometry maths too (don't worry, we'll guide you
