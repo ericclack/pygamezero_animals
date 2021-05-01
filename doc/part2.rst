@@ -129,8 +129,90 @@ Now *Run* and see what happens. Make sure you've created a few animals
 first with :code:`Animals()`. There's a few bugs... note them down and have
 a think about how we could solve them.
 
+Bugs
+----
+
+Did you find some bugs? The big one is that these sheep end up on top of each other, which isn't very realistic. Also we often get a divide by zero error when the distance between sheep becomes zero. Oh and the sheep can leave the screen. 
+
+Let's fix these bugs...
+
+Not too close
+-------------
+
+Look in your `attraction_to` function and you can see that attraction is
+equal to `min(2, 30 / d)`. We can make a graph of this function so that we can
+see how it changes as the sheep get closer.
+
+There are a few tools to draw graphs online, here's one on `Maths Is Fun`_
+
+Let's irgnore the `min` function and just plot `30/x` (using `x` instead of `d` because that's what the graph tool wants):
+
+.. image:: images/graph_30_x.png
+	   :width: 400
+
+Can you see that as the distance (x) decreases the force (y) gets
+stronger and stronger, with the blue line rising very steeply once x is
+less than 5.
+
+What we want is for the force to decrease when the sheep gets closer
+than a certain amount and to become negative when they get too close,
+so that they don't overlap.
+
+What would this kind of graph look like? It could look something like this:
+
+.. image:: images/graph_sketch.png
+	   :width: 400
+
+That is actually a bit like the graph of `-cos(x)`, so let's try that in
+our `attraction_to` function, change the yellow lines like so:
+
+
+.. code-block:: python
+   :emphasize-lines: 3
+
+   def attraction_to(self, other):
+        d = self.distance_to(other)
+        return -math.cos(d)
+
+When you run this you'll see that the sheep seem pretty happy with
+where they are, that's because `d` is too big so let's make it smaller
+by dividing it by 20.
+
+.. code-block:: python
+   :emphasize-lines: 3
+
+   def attraction_to(self, other):
+        d = self.distance_to(other)
+        return -math.cos(d/20)
+
+So now your sheep form one or more flocks. Do try other numbers
+instead of 20 and see what you like.
+
+If you want your sheep to move a bit slower, we can reduce the force
+by multiplying by a number less than 1, try this:
+
+.. code-block:: python
+   :emphasize-lines: 3
+
+   def attraction_to(self, other):
+        d = self.distance_to(other)
+        return 0.2 * -math.cos(d/20)
+		   
+
+Divide by Zero?
+---------------
+
+Because our function now uses `cos` we never get a divide by zero error :)
+
+Leaving the screen
+------------------
+
+This happens less frequently now, so we can ignore it, but we will have to
+fix it once we add a sheepdog, which is what we are doing next. 
+	
 Part 3 Coming Soon...
 ---------------------
 
 
 .. _`SOHCAHTOA`: https://www.youtube.com/watch?v=PIWJo5uK3Fo&ab_channel=JonathanMann
+.. _`Maths IS Fun`: https://www.mathsisfun.com/data/function-grapher.php

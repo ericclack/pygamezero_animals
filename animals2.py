@@ -1,7 +1,7 @@
 import random, math, time
 
-WIDTH = 500
-HEIGHT = 400
+WIDTH = 800
+HEIGHT = 600
 
 class Animal(Actor):
 

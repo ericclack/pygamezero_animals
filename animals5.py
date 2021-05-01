@@ -142,7 +142,7 @@ class Sheep(Animal):
             return -100/d
 
         elif isinstance(other, SheepDog):
-            return -10 / (d / 5) ** 2
+            return -20 / (d+0.001 / 5) ** 2
 
         return 0
 
@@ -175,7 +175,7 @@ class Wolf(Animal):
 class SheepDog(Animal):
     def __init__(self):
         super().__init__('dog.png')
-        self.max_speed = MAX_SPEED*1.4
+        self.max_speed = MAX_SPEED*2
 
     def move(self):
         super().move(check_animals=False, check_zones=True, check_mouse=True)
@@ -187,7 +187,7 @@ class SheepDog(Animal):
 # Make animals
 for i in range(20):
     Sheep()
-#Wolf()
+Wolf()
 SheepDog()
 
 # Make zones

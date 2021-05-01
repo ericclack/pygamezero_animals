@@ -1,7 +1,7 @@
 import random, math, time
 
-WIDTH = 500
-HEIGHT = 400
+WIDTH = 800
+HEIGHT = 600
 
 class Animal(Actor):
 
@@ -16,12 +16,6 @@ class Animal(Actor):
     def move(self):
         for o in self.other_animals():
             self.move_by_attraction(o)
-
-        # Wrap around
-        if self.x < 0:         self.x = WIDTH
-        elif self.x > WIDTH:   self.x = 0
-        if self.y < 0:         self.y = HEIGHT
-        elif self.y > HEIGHT:  self.y = 0
 
     def other_animals(self):
         """All the animals except us"""
@@ -48,15 +42,11 @@ class Animal(Actor):
     def attraction_to(self, other):
         # Attraction until we get too close
         d = self.distance_to(other)
-        return min(0.25, (-30/d) + 0.01*d)
+        return 0.2 * -math.cos(d/40)
 
-# Make 3 animals
-Animal()
-Animal()
-Animal()
-Animal()
-Animal()
-Animal()
+# Make some animals
+for i in range(15):
+    Animal()
 
 def draw():
     screen.blit('southdowns.jpeg', (0,0))
