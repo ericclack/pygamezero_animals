@@ -209,9 +209,8 @@ Leaving the screen
 
 This happens less frequently now, so we can ignore it, but we will have to
 fix it once we add a sheepdog, which is what we are doing next. 
-	
-Part 3 Coming Soon...
----------------------
+
+Read on to  :ref:`part3`.
 
 
 .. _`SOHCAHTOA`: https://www.youtube.com/watch?v=PIWJo5uK3Fo&ab_channel=JonathanMann
