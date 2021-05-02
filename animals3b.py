@@ -45,8 +45,11 @@ class Animal(Actor):
 
 class Sheep(Animal):
 
-    def __init__(self):
-        super().__init__('sheep.png')
+    def __init__(self, black=False):
+        if black:
+            super().__init__('black-sheep.png')
+        else:
+            super().__init__('sheep.png')
 
     def attraction_to(self, other):
         d = self.distance_to(other)
@@ -67,7 +70,7 @@ class SheepDog(Animal):
 
 # Make some animals
 for i in range(15):
-    Sheep()
+    Sheep(random.choice([True, False]))
 
 SheepDog()
 

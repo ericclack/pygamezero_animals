@@ -51,14 +51,21 @@ class Sheep(Animal):
         super().__init__('sheep.png')
 
 
+class BlackSheep(Animal):
+
+    def __init__(self):
+        super().__init__('black-sheep.png')
+
+
 class SheepDog(Animal):
 
     def __init__(self):
         super().__init__('dog.png')
 
 # Make some animals
-for i in range(15):
+for i in range(10):
     Sheep()
+    BlackSheep()
 
 SheepDog()
 
