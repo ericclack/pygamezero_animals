@@ -145,7 +145,8 @@ see how it changes as the sheep get closer.
 
 There are a few tools to draw graphs online, here's one on `Maths Is Fun`_
 
-Let's irgnore the `min` function and just plot `30/x` (using `x` instead of `d` because that's what the graph tool wants):
+Let's ignore the `min` function and just plot `30/x` (using `x`
+instead of `d` because that's what the graph tool wants):
 
 .. image:: images/graph_30_x.png
 	   :width: 400
