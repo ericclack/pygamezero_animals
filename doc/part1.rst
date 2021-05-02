@@ -17,7 +17,8 @@ Create a new file in Mu and enter the following lines:
    HEIGHT = 400
    TITLE = "Animal Simulation"
 
-Press **Run** and save the file as :code:`animals.py` in your :code:`mu_code` directory.
+Press **Run** and save the file as :code:`animals.py` in your
+:code:`mu_code` directory.
 
 You should see a new, empty window appear.
 
@@ -28,8 +29,8 @@ You remember that we use Actor objects to draw sprites on the screen?
 If not, take a look at `Flappy Bird Tutorial`_ for a nice simple
 introduction.
 
-So we are going to create our own specialised version of an Actor to
-represent our on-screen animals.
+So we are going to create a new kind of an Actor to represent our
+on-screen animals.
 
 First, import the random library as we'll need this to position the
 animals. Add the :code:`import random` line as the first line of your
@@ -47,10 +48,10 @@ Now let's add our new class. Add this code:
            self.y = random.randint(HEIGHT*1/4, HEIGHT*3/4)	   
 
 So what does all that mean? Well :code:`class Animals` creates a new
-class called Animal. And an *Animal* is a specialised form of an *Actor*
-because we said :code:`class Animal(Actor)`. That means that *Animal* can
-do everything *Actor* can do, which is handy because it means it already
-knows how to draw itself and move around the screen. 
+class called Animal. And an *Animal* is a new kind of *Actor* because
+we said :code:`class Animal(Actor)`. That means that *Animal* can do
+everything *Actor* can do, which is handy because it means it already
+knows how to draw itself and move around the screen.
 
 The function (or more correctly, method) :code:`__init__` is called
 the constructor, it's what we want to happen when we make a new

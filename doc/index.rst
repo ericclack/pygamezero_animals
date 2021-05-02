@@ -59,7 +59,8 @@ Credits
 
 Images:
 
-https://opengameart.org/content/lpc-style-farm-animals
+ * Sheep: https://opengameart.org/content/lpc-style-farm-animals
+ * Sheep Dog: https://www.vecteezy.com/vector-art/137239-border-collie-vector-illustrarion-sets
 
 
 Indices and tables

@@ -40,9 +40,7 @@ class Animal(Actor):
         return math.atan2(other.y - self.y, other.x - self.x)
 
     def attraction_to(self, other):
-        # Attraction until we get too close
-        d = self.distance_to(other)
-        return 0.2 * -math.cos(d/40)
+        return 0
 
 
 class Sheep(Animal):
@@ -50,11 +48,22 @@ class Sheep(Animal):
     def __init__(self):
         super().__init__('sheep.png')
 
+    def attraction_to(self, other):
+        d = self.distance_to(other)
+        if isinstance(other, Sheep):
+            # Attraction until we get too close
+            return 0.1 * -math.cos(d/40)
+        elif isinstance(other, SheepDog):
+            return -100/d+0.001
+
 
 class SheepDog(Animal):
 
     def __init__(self):
         super().__init__('dog.png')
+
+    def move(self):
+        self.x, self.y = pygame.mouse.get_pos()
 
 # Make some animals
 for i in range(15):
