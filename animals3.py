@@ -62,6 +62,8 @@ class SheepDog(Animal):
     def __init__(self):
         super().__init__('dog.png')
 
+
+
 # Make some animals
 for i in range(10):
     Sheep()

@@ -57,6 +57,7 @@ class Sheep(Animal):
             # Attraction until we get too close
             return 0.1 * -math.cos(d/40)
         elif isinstance(other, SheepDog):
+            # Move away
             return -100/d+0.001
 
 
